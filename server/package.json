@@ -1,0 +1,29 @@
+{
+  "name": "p-lib",
+  "version": "1.0.0",
+  "description": "library management with neo&ember",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --harmony index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balaf/p-lib.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/balaf/p-lib/issues"
+  },
+  "homepage": "https://github.com/balaf/p-lib#readme",
+  "dependencies": {
+    "boom": "^4.2.0",
+    "koa": "^2.0.0-alpha.8",
+    "koa-bodyparser": "^3.2.0",
+    "koa-router": "^7.0.1",
+    "moment": "^2.18.0",
+    "neo4j-driver": "^1.1.1",
+    "winston": "^2.3.1"
+  }
+}
