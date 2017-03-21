@@ -1,49 +1,55 @@
-var log = require('../utils/logger');
+var log = require('../utils/logger'),
+    Title = require ('../model/title'),
+    db = require('../data/title');
 
 
-module.exports.getAll = async function(ctx,next) {
+async function getAll(ctx,next) {
   log.debug("[Router] Get Titles: ", ctx.request.body);
   try {
-    log.debug("try");
+    let result = await db.getAll();
+    ctx.body = result;
+    log.debug("[Router] Get Titles Successfull: ", ctx.body);
   } catch (err) {
-    log.error("[Router] Get Titles: ", err);
+    log.error("[Router] Get Titles Error: ", err);
     //TODO
     // not throw 5xx error for bad requests
     throw err;
   }
-  ctx.body = { 'result': 'ok'};
-  log.debug("[Router] Get Titles: ", ctx.body);
+
 }
 
-module.exports.getById = async function(ctx,next) {
+async function getById(ctx,next) {
   log.debug("[Router] Get Title by Id: ", ctx.params);
   try {
-    log.debug("try");
+    let result = await db.getById(ctx.params.id);
+    ctx.body = result;
+    log.debug("[Router] Get Title by Id Successfull: ", ctx.body);
   } catch (err) {
-    log.error("[Router] Get Title by Id: ", err);
+    log.error("[Router] Get Title by Id Error: ", err);
     //TODO
     // not throw 5xx error for bad requests
     throw err;
   }
-  ctx.body = { 'result': 'ok'};
-  log.debug("[Router] Get Title by Id Id: ", ctx.body);
 }
 
-module.exports.create = async function(ctx,next) {
+async function create(ctx,next) {
   log.debug("[Router] Create Title: ", ctx.request.body);
   try {
-    log.debug("try");
+    let title = new Title(ctx.request.body);
+    log.debug("[Router] Title Object: ", title);
+
+    let result = await db.save(title);
+    ctx.body = result;
+    log.debug("[Router] Create Title Successfull: ", ctx.body);
   } catch (err) {
-    log.error("[Router] Create Title: ", err);
+    log.error("[Router] Create Title Error: ", err);
     //TODO
     // not throw 5xx error for bad requests
     throw err;
   }
-  ctx.body = { 'result': 'ok'};
-  log.debug("[Router] Create Title: ", ctx.body);
 }
 
-module.exports.update = async function(ctx,next) {
+async function update(ctx,next) {
   log.debug("[Router] Get Update Title: ", ctx.params);
   try {
     log.debug("try");
@@ -56,3 +62,10 @@ module.exports.update = async function(ctx,next) {
   ctx.body = { 'result': 'ok'};
   log.debug("[Router]  Get Update Title: ", ctx.body);
 }
+
+module.exports = {
+  getAll: getAll,
+  getById: getById,
+  create: create,
+  update: update
+};

@@ -1,8 +1,13 @@
 var log = require('../utils/logger');
 
 
-module.exports.update = async function(ctx,next) {
+async function create(ctx,next) {
 };
 
-module.exports.create = async function(ctx,next) {
+async function update (ctx,next) {
+};
+
+module.exports = {
+  update: update,
+  create: create
 };

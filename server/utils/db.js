@@ -15,9 +15,21 @@ const URL = localURL;
 
 var driver = neo4j.driver(URL, neo4j.auth.basic(USER, PASSWORD));
 
-//     var session = driver.session();
+var session = driver.session();
+
+// var Title = {
+//   title : "Best Book",
+//   authors: ["elias", "balafoutis"],
+//   edition: neo4j.int(2),
+//   pages: neo4j.int(143),
+//   pubYear: 2015,
+//   cover: null,
+//   notes: null
+// };
+// var query = "CREATE (t:Title $Title) RETURN t";
+//
 // session
-//     .run("CREATE (n:Title {name:'Test Title'}) RETURN n.name")
+//     .run(query, {Title})
 //     .then(function(result) {
 //         result.records.forEach(function(record) {
 //             console.log(record)

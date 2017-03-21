@@ -1,7 +1,7 @@
 var log = require('../utils/logger');
 
 
-module.exports.getAll = async function(ctx,next) {
+async function getAll(ctx,next) {
   log.debug("[Router] Get Authors: ", ctx.request.body);
   try {
     log.debug("try");
@@ -15,7 +15,7 @@ module.exports.getAll = async function(ctx,next) {
   log.debug("[Router] Get Authors: ", ctx.body);
 }
 
-module.exports.getById = async function(ctx,next) {
+async function getById(ctx,next) {
   log.debug("[Router] Get Authors by Id: ", ctx.params);
   try {
     log.debug("try");
@@ -28,3 +28,8 @@ module.exports.getById = async function(ctx,next) {
   ctx.body = { 'result': 'ok'};
   log.debug("[Router] Get Authors by Id: ", ctx.body);
 }
+
+module.exports = {
+  getAll: getAll,
+  getById: getById
+};
