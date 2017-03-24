@@ -1,0 +1,8 @@
+<h3> Search </h3>
+{{ aupac-ember-data-typeahead
+  modelClass='search'
+  placeholder="type a keyword"
+  action=(action (mut selection))
+}}
+
+{{outlet}}

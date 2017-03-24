@@ -1,5 +1,6 @@
 {
   "name": "plib-client",
   "dependencies": {
+    "typeahead.js": "~0.11.1"
   }
 }
