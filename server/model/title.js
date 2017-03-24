@@ -1,6 +1,5 @@
 
-const uuidV4 = require('uuid/v4'),
-      db = require('../utils/db');
+const uuidV4 = require('uuid/v4');
 
 module.exports = function Title (data) {
   this.title = data.title;

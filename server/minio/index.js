@@ -10,70 +10,92 @@ var minioClient = new Minio.Client({
 });
 
 // create bucket in case it doesn't exist
-async function save (filename, file, bucket) {
-  minioClient.bucketExists(bucket, function(err) {
-    if (err) {
-       if (err.code == 'NoSuchBucket') {
-         /// it doesn't exist - create it
-         log.debug("bucket does not exist:", bucket)
-         minioClient.makeBucket(bucket, 'us-east-1', function(err) {
-          if (err) {
-            return console.log('Error creating bucket.', err)
-          }
-          minioClient.fPutObject(bucket, filename, file, 'application/octet-stream', function (err, etag) {
+function save (bucket, filename, file) {
+  return new Promise( (resolve,reject) => {
+    minioClient.bucketExists(bucket, (err) => {
+      if (err) {
+         if (err.code == 'NoSuchBucket') {
             if (err) {
-              log.error("[Minio]: File not saved:", err);
-              return err
+              return reject(err);
             }
             else {
-              log.debug("[Minio]: File saved:", etag);
-              return etag;
-             }
-           });
-         });
+              minioClient.fPutObject(bucket, filename, file, 'application/octet-stream', (err, etag) => {
+                if (err) {
+                  return reject(err)
+                }
+                else {
+                  return resolve(etag);
+                }
+              });
+            }
+         }
+         else {
+           return reject(err);
+         }
        }
        else {
-         log.error("[Minio]: Bucket Exists error:", err);
-         return err
+         // bucket exists, upload the file
+         minioClient.fPutObject(bucket, filename, file, 'application/octet-stream', (err, etag) => {
+           if (err) {
+             return reject(err)
+           }
+           else {
+             return resolve(etag);
+           }
+         });
        }
-    }
-    else {
-      // bucket exists, upload the file
-      minioClient.fPutObject(bucket, filename, file, 'application/octet-stream', function (err, etag) {
-        if (err) {
-          log.error("[Minio]: File not saved:", err);
-          return err
-        }
-        else {
-          log.debug("[Minio]: File saved:", etag);
-          return etag;
-        }
-      })
-    }
-  })
+     });
+  });
 }
 
-async function read (bucket, filename) {
-  var file;
-  minioClient.getObject(bucket, filename, function(err, dataStream) {
-    if (err) {
-      log.error("[Minio] Read File Error",err)
-      return err;
-    }
-    dataStream.on('data', function(chunk) {
-      file += chunk
+function read (bucket, filename) {
+  return new Promise( (resolve,reject) => {
+    var file;
+    minioClient.getObject(bucket, filename, (err, dataStream) => {
+      if (err) {
+        return reject(err);
+      }
+      else {
+        return resolve(dataStream);
+      }
+    });
+  });
+}
+
+function copy (bucket, name, source) {
+  return new Promise( (resolve, reject) => {
+    var conds = new Minio.CopyConditions()
+    //conds.setMatchETag('bd891862ea3e22c93ed53a098218791d')
+    minioClient.copyObject(bucket, nane, source, conds, function(e, data) {
+      if (e) {
+        return reject(e);
+      }
+      return resove(data);
+    });
+  });
+};
+
+function remove (bucket, filename) {
+  return new Promise ((resolve,reject) => {
+    minioClient.removeObject(bucket, filename, function(err) {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
     })
-    dataStream.on('end', function() {
-      return file;
-    })
-    dataStream.on('error', function(err) {
-      log.error("[Minio] Read File unterrupted",err)
-      return err;
-    })
-  })
+  });
+}
+
+async function move (source, destination) {
+  let sourcePath = '/'+source.bucket+'/'+source.filename;
+  await copy(destination.bucket, destiname.filename, sourcePath);
+  await remove(source.bucket, source.filename);
 }
 
 module.exports = {
   save: save,
-  read: read
+  read: read,
+  copy: copy,
+  remove: remove,
+  move: move
 }

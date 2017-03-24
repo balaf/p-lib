@@ -26,6 +26,8 @@ router
   .patch('/api/books/:id', route.books.update)
   .get('/api/authors', route.authors.getAll)
   .get('/api/authirs/:id',route.authors.getById)
+  .post('/api/upload', route.upload.save)
+  .get('/api/upload/:id', route.upload.get)
 
 app
   .use(bodyParser())
